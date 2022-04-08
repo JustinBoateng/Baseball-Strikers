@@ -76,6 +76,7 @@ public class AI : MonoBehaviour
 
         if (timer <= 0 && !startup && !endlag) throwing = true;
         
+        //Throw Startup
         if (throwing && !startup)
         {
             throwing = false;
@@ -88,6 +89,8 @@ public class AI : MonoBehaviour
             throwStartup = throwStartup - ThrowFrameRate;
         }
 
+
+        //Throwing Frames
         if(startup && throwStartup <= 0 && !endlag)
         {
             startup = false;
@@ -104,6 +107,7 @@ public class AI : MonoBehaviour
             throwEndlag = throwEndlag - ThrowFrameRate;
         }
 
+        //endlag frames
         if(endlag && throwEndlag <= 0)
         {
             throwing = false;

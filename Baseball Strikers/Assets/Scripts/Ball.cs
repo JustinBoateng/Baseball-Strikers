@@ -44,4 +44,19 @@ public class Ball : MonoBehaviour
         Destroy(this.gameObject);
     }//have the MissZone call this function to erase the ball from the game
     //in fact... let the destruction of the ball be determined by if it hits a zone rather than a time limit
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "BatHitbox")
+        {
+            Debug.Log("It's a Hit!!!");
+            DestroyBall();
+        }
+
+        else if(collision.tag == "MissZone")
+        {
+            Debug.Log("It's a Miss...");
+            DestroyBall();
+        }
+    }
 }
