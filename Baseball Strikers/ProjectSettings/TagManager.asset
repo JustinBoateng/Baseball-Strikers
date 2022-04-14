@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - BatHitbox
-  - MissZone
+  - HurtZone
+  - OutZone
   layers:
   - Default
   - TransparentFX

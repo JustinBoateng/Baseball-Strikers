@@ -18,6 +18,7 @@ public class AI : MonoBehaviour
     [SerializeField] private Sprite[] SpriteArray;
     private SpriteRenderer mySR;
 
+    [SerializeField] private float maxSpeedMultiplier;
 
     [SerializeField] private float maxTimer = 10;
     [SerializeField] private float timer = 10;
@@ -98,7 +99,7 @@ public class AI : MonoBehaviour
             mySR.sprite = SpriteArray[2];
 
             Ball = Instantiate(BallPrefab, SpawnPoint.position, this.transform.rotation);
-            Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed * facing);   
+            Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed *Random.Range(1, maxSpeedMultiplier) * facing);   
 
         }
 
