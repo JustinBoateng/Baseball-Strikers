@@ -35,8 +35,11 @@ public class AI : MonoBehaviour
     [SerializeField] private float ThrowFrameRate;
 
     [SerializeField] private int facing = -1; //-1 = left, 1 = right
-    
+
     //this is either Striker or Pitcher
+
+    [SerializeField] public int HP;
+    [SerializeField] public int Meter;
 
 
     // Start is called before the first frame update
@@ -99,8 +102,8 @@ public class AI : MonoBehaviour
             mySR.sprite = SpriteArray[2];
 
             Ball = Instantiate(BallPrefab, SpawnPoint.position, this.transform.rotation);
-            Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed *Random.Range(1, maxSpeedMultiplier) * facing);   
-
+            Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed *Random.Range(1, maxSpeedMultiplier) * facing);
+            Ball.GetComponent<Ball>().setHit(false);
         }
 
         if(endlag && throwEndlag > 0)
@@ -121,4 +124,10 @@ public class AI : MonoBehaviour
             timer = Random.Range(0, maxTimer);
         }
     }
+
+    public void HPDec(int i)
+    {
+        HP = HP - i;
+    }
+
 }

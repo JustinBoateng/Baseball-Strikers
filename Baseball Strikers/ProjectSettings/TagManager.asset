@@ -7,6 +7,7 @@ TagManager:
   - BatHitbox
   - HurtZone
   - OutZone
+  - EnemyHurtZone
   layers:
   - Default
   - TransparentFX
