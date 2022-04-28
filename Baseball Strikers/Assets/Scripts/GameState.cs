@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 public class GameState : MonoBehaviour
 {
@@ -9,6 +11,13 @@ public class GameState : MonoBehaviour
 
     public int HitBalls = 0;
     public int[] BallHitType = new int[5];
+    /*
+    HorJust
+    HorEarly
+    VerJust
+    VerEarly
+    Bunt         
+     */
 
     public Player player;
     [SerializeField] public float time;
@@ -18,15 +27,15 @@ public class GameState : MonoBehaviour
     [SerializeField] public int Energy;
     [SerializeField] public Text EnergyMeter;
 
-    /*
-        HorJust
-        HorEarly
-        VerJust
-        VerEarly
-        Bunt         
-         */
+    public GameObject GameUI;
+    public GameObject PauseUI;
+    public GameObject DefaultButton;
+    public bool PauseFlag = false;
+    public bool FreezeFlag = false;
+    //FreezeFlag indicates when the game wants to stop in place for a sec.
+    //similar to Pause flag, but isn't based around the player pausing the game
 
-
+    //keeping the same GameState
     private void Awake()
     {
 
@@ -49,9 +58,47 @@ public class GameState : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!PauseFlag)
+            {
+                PauseGame();               
+            }
+
+            else
+            {
+                ResumeGame();
+            }
+        }
+
         time = time - timerate;
         timer.text = Mathf.Round(time).ToString();
+
+
     }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0f;
+        PauseFlag = true;
+        PauseUI.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(DefaultButton);
+        Debug.Log("Paused");
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+        PauseFlag = false;
+        PauseUI.SetActive(false);
+        Debug.Log("Resumed");
+    }
+
+    public void GameSpeed(float f)
+    {
+        Time.timeScale = f;
+    }
+
 
     public void BallHit()
     {

@@ -60,125 +60,129 @@ public class Ball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "BatHitbox")
+        if (!GameState.GS.PauseFlag)
         {
-            tempstoredspeed = speed * -1;
-            //Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + collision.GetComponent<HitBox>().getTiming());
-
-            rb.velocity = Vector2.zero;
-
-            if(collision.GetComponent<HitBox>().getType() == "Hor")
+            if (collision.tag == "BatHitbox")
             {
-                isHit = true;
-                if (collision.GetComponent<HitBox>().getTiming() == "Early" && wasHitBy == "")
-                {
-                    wasHitBy = "Early";
-                    Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + wasHitBy);
+                tempstoredspeed = speed * -1;
+                //Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + collision.GetComponent<HitBox>().getTiming());
 
-                    GameState.GS.HitTypeInc(0);
-                    GameState.GS.MeterGain(1);
+                rb.velocity = Vector2.zero;
+
+                if (collision.GetComponent<HitBox>().getType() == "Hor")
+                {
+                    isHit = true;
+                    if (collision.GetComponent<HitBox>().getTiming() == "Early" && wasHitBy == "")
+                    {
+                        wasHitBy = "Early";
+                        Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + wasHitBy);
+
+                        GameState.GS.HitTypeInc(0);
+                        GameState.GS.MeterGain(1);
+
+                    }
+
+                    if (collision.GetComponent<HitBox>().getTiming() == "Just" && wasHitBy == "")
+                    {
+                        wasHitBy = "Just";
+                        Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + wasHitBy);
+
+                        GameState.GS.HitTypeInc(1);
+                        GameState.GS.MeterGain(2);
+                    }
+
+                    if (wasHitBy == "Just")
+                    {
+                        rb.AddForce(new Vector2(tempstoredspeed, 10), ForceMode2D.Impulse);
+
+                    }
+
+                    if (wasHitBy == "Early")
+                    {
+                        rb.AddForce(new Vector2(speed, 5), ForceMode2D.Impulse);
+
+                    }
 
                 }
 
-                if (collision.GetComponent<HitBox>().getTiming() == "Just" && wasHitBy == "")
+                else if (collision.GetComponent<HitBox>().getType() == "Strike")
                 {
-                    wasHitBy = "Just";
+                    isHit = true;
+                    wasHitBy = "Strike";
                     Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + wasHitBy);
-
+                    rb.AddForce(new Vector2(tempstoredspeed + 2, 0), ForceMode2D.Impulse);
                     GameState.GS.HitTypeInc(1);
-                    GameState.GS.MeterGain(2);
                 }
 
-                if (wasHitBy == "Just")
+                else if (collision.GetComponent<HitBox>().getType() == "Ver")
                 {
-                    rb.AddForce(new Vector2(tempstoredspeed, 10), ForceMode2D.Impulse);
-                           
+
+
+                    if (collision.GetComponent<HitBox>().getTiming() == "Just" && wasHitBy == "")
+                    {
+                        wasHitBy = "Just";
+                        GameState.GS.HitTypeInc(2);
+                        isHit = true;
+
+                        GameState.GS.MeterGain(2);
+
+                    }
+
+                    if (collision.GetComponent<HitBox>().getTiming() == "Early" && wasHitBy == "")
+                    {
+                        wasHitBy = "Early";
+                        GameState.GS.HitTypeInc(3);
+                        isHit = true;
+
+                        GameState.GS.MeterGain(1);
+
+                    }
+
+                    if (wasHitBy == "Just")
+                    {
+                        rb.AddForce(new Vector2(10, -speed), ForceMode2D.Impulse);
+
+                    }
+
+
+                    if (wasHitBy == "Early")
+                    {
+                        rb.AddForce(new Vector2(5, -speed), ForceMode2D.Impulse);
+
+                    }
                 }
 
-                if (wasHitBy == "Early")
+                else if (collision.GetComponent<HitBox>().getType() == "Bunt")
                 {
-                    rb.AddForce(new Vector2(speed, 5), ForceMode2D.Impulse);
-                    
-                }
-
-            }
-
-            else if (collision.GetComponent<HitBox>().getType() == "Strike")
-            {
-                isHit = true;
-                wasHitBy = "Strike";
-                Debug.Log("Hit by " + collision.GetComponent<HitBox>().getType() + " --" + wasHitBy);
-                rb.AddForce(new Vector2(tempstoredspeed + 2, 0), ForceMode2D.Impulse);
-                GameState.GS.HitTypeInc(1);
-            }
-
-            else if (collision.GetComponent<HitBox>().getType() == "Ver")
-            {
-    
-
-                if (collision.GetComponent<HitBox>().getTiming() == "Just" && wasHitBy == "")
-                {
-                    wasHitBy = "Just";
-                    GameState.GS.HitTypeInc(2);
+                    rb.gravityScale = 1;
+                    rb.AddForce(new Vector2(2, 2), ForceMode2D.Impulse);
+                    GameState.GS.HitTypeInc(4);
                     isHit = true;
-
-                    GameState.GS.MeterGain(2);
-
                 }
+                //DestroyBall();
 
-                if (collision.GetComponent<HitBox>().getTiming() == "Early" && wasHitBy == "")
-                {
-                    wasHitBy = "Early";
-                    GameState.GS.HitTypeInc(3);
-                    isHit = true;
-
-                    GameState.GS.MeterGain(1);
-
-                }
-
-                if (wasHitBy == "Just")
-                {
-                    rb.AddForce(new Vector2(10, -speed), ForceMode2D.Impulse);
-
-                }
-
-
-                if (wasHitBy == "Early")
-                {
-                    rb.AddForce(new Vector2(5, -speed), ForceMode2D.Impulse);
-
-                }
+                //Destroy(bc);
             }
 
-            else if (collision.GetComponent<HitBox>().getType() == "Bunt")
+            else if (collision.tag == "OutZone")
             {
-                rb.gravityScale = 1;
-                rb.AddForce(new Vector2(2, 2), ForceMode2D.Impulse);
-                GameState.GS.HitTypeInc(4);
-                isHit = true;
+                Debug.Log("Ball Has Left");
+                DestroyBall();
             }
-            //DestroyBall();
 
-            //Destroy(bc);
+            else if (collision.tag == "HurtZone" && wasHitBy == "")
+            {
+                Debug.Log("Ball Hit Player");
+                DestroyBall();
+            }
+
+            else if (collision.tag == "EnemyHurtZone" && isHit)
+            {
+                Debug.Log("Ball Hit Enemy");
+                DestroyBall();
+            }
         }
 
-        else if(collision.tag == "OutZone" )
-        {
-            Debug.Log("Ball Has Left");
-            DestroyBall();
-        }
-
-        else if(collision.tag == "HurtZone" && wasHitBy == "")
-        {
-            Debug.Log("Ball Hit Player");
-            DestroyBall();
-        }
-
-        else if (collision.tag == "EnemyHurtZone" && isHit)
-        {
-            Debug.Log("Ball Hit Enemy");
-            DestroyBall();
-        }
     }
 
 

@@ -82,279 +82,284 @@ public class Player : MonoBehaviour
             ModeSwitch();    
         }
 
-
-        //BATTER MODE
-        if(PlayMode == "Batter")
+        if (!GameState.GS.PauseFlag)
         {
-            //Bunt and Strike States
+            //BATTER MODE
+            if (PlayMode == "Batter")
             {
-                if (HorAxis == -1 && !SwingState)
+                //Bunt and Strike States
                 {
-                    BuntState = true;
-                    StrikeState = false;
-                }
-
-                else if (HorAxis == 1)
-                {
-                    StrikeState = true;
-                    BuntState = false;
-
-                }
-
-                else
-                {
-                    BuntState = false;
-                    StrikeState = false;
-                }
-
-            }
-
-            if (Input.GetKeyDown("m") && !HorSwing && !BuntState)
-            {
-                HorSwing = true;
-                SwingState = true;
-
-            }
-
-            if (Input.GetKeyDown("n") && !VerSwing && !BuntState)
-            {
-                VerSwing = true;
-                SwingState = true;
-            }
-
-            //Bunting
-            if (!SwingState)
-            {
-                if (BuntState && !VerSwing)
-                {
-                    if (!BuntSpriteSnap)
+                    if (HorAxis == -1 && !SwingState)
                     {
-                        mySR.sprite = SpriteArray[7];
-                        BuntSpriteSnap = true;
+                        BuntState = true;
+                        StrikeState = false;
                     }
 
-                    BuntHitbox.SetActive(true);
-                }
-
-                else if (!BuntState)
-                {
-                    if (BuntSpriteSnap)
+                    else if (HorAxis == 1)
                     {
-                        mySR.sprite = SpriteArray[0];
-                        BuntSpriteSnap = false;
-                    }
-                    BuntHitbox.SetActive(false);
-                }
-            }
-
-            //Swinging
-            if (!BuntState)
-            {
-                //Horizontal Swing and StrikeSwing
-                {
-                    if (HorSwing && !HorSwingStartup)
-                    {
-                        HorSwing = false;
-                        HorSwingStartup = true;
-                        mySR.sprite = SpriteArray[1];
+                        StrikeState = true;
+                        BuntState = false;
 
                     }
 
-                    if (HorSwingStartup && HorStartingSwingFrames > 0)
+                    else
                     {
-                        HorStartingSwingFrames = HorStartingSwingFrames - PlayerFrameRate;
+                        BuntState = false;
+                        StrikeState = false;
                     }
 
+                }
 
-                    //Swinging Frames
-                    if (HorSwingStartup && HorStartingSwingFrames <= 0 && !HorSwinging)
+                if (Input.GetKeyDown("m") && !HorSwing && !BuntState)
+                {
+                    HorSwing = true;
+                    SwingState = true;
+
+                }
+
+                if (Input.GetKeyDown("n") && !VerSwing && !BuntState)
+                {
+                    VerSwing = true;
+                    SwingState = true;
+                }
+
+                //Bunting
+                if (!SwingState)
+                {
+                    if (BuntState && !VerSwing)
                     {
-                        HorSwingStartup = false;
-                        HorSwinging = true;
-                        mySR.sprite = SpriteArray[2];
-
-                        //StrikeState Special Move
-                        if (StrikeState && GameState.GS.MeterCheck() >= SpecialMoveCost)
+                        if (!BuntSpriteSnap)
                         {
-                            StrikeHitbox.SetActive(true);
-                            GameState.GS.MeterGain(-SpecialMoveCost);
-                            HorSwingingFrames = HorSwingingFrames / 2;
-                            HorStartingSwingFrames = HorStartingSwingFrames / 2;
+                            mySR.sprite = SpriteArray[7];
+                            BuntSpriteSnap = true;
                         }
 
-                        else HorHitbox.SetActive(true);
+                        BuntHitbox.SetActive(true);
                     }
 
-                    if (HorSwinging && HorSwingingFrames > 0)
+                    else if (!BuntState)
                     {
-                        HorSwingingFrames = HorSwingingFrames - PlayerFrameRate;
-                    }
-
-                    //swing endlag
-                    if (HorSwinging && HorSwingingFrames <= 0 && !HorSwingEndlag)
-                    {
-                        HorSwinging = false;
-                        HorSwingEndlag = true;
-                        HorHitbox.SetActive(false);
-                        StrikeHitbox.SetActive(false);
-                        mySR.sprite = SpriteArray[3];
-                    }
-
-                    if (HorSwingEndlag && HorEndlagFrames > 0)
-                    {
-                        HorEndlagFrames = HorEndlagFrames - PlayerFrameRate;
-                    }
-
-                    if (HorSwingEndlag && HorEndlagFrames <= 0)
-                    {
-
-                        HorSwingEndlag = false;
-                        HorSwing = false;
-
-                        HorSwingStartup = false;
-                        HorSwinging = false;
-
-                        HorHitbox.SetActive(false);
-                        StrikeHitbox.SetActive(false);
-
-                        HorEndlagFrames = BaseEndlagFrames;
-                        HorSwingingFrames = BaseSwingingFrames;
-                        HorStartingSwingFrames = BaseStartingSwingFrames;
-                        mySR.sprite = SpriteArray[0];
-
-                        SwingState = false;
-                    }
-
-                }
-                //
-
-                //Vertical Swing
-                {
-                    {
-                        //VerSwing Startup
-                        if (VerSwing && !VerSwingStartup)
+                        if (BuntSpriteSnap)
                         {
-                            VerSwing = false;
-                            VerSwingStartup = true;
-                            mySR.sprite = SpriteArray[4];
+                            mySR.sprite = SpriteArray[0];
+                            BuntSpriteSnap = false;
+                        }
+                        BuntHitbox.SetActive(false);
+                    }
+                }
+
+                //Swinging
+                if (!BuntState)
+                {
+                    //Horizontal Swing and StrikeSwing
+                    {
+                        if (HorSwing && !HorSwingStartup)
+                        {
+                            HorSwing = false;
+                            HorSwingStartup = true;
+                            mySR.sprite = SpriteArray[1];
 
                         }
 
-                        if (VerSwingStartup && VerStartingSwingFrames > 0)
+                        if (HorSwingStartup && HorStartingSwingFrames > 0)
                         {
-                            VerStartingSwingFrames = VerStartingSwingFrames - PlayerFrameRate;
+                            HorStartingSwingFrames = HorStartingSwingFrames - PlayerFrameRate;
                         }
 
 
                         //Swinging Frames
-                        if (VerSwingStartup && VerStartingSwingFrames <= 0 && !VerSwinging)
+                        if (HorSwingStartup && HorStartingSwingFrames <= 0 && !HorSwinging)
                         {
-                            VerSwingStartup = false;
-                            VerSwinging = true;
-                            mySR.sprite = SpriteArray[5];
+                            HorSwingStartup = false;
+                            HorSwinging = true;
+                            mySR.sprite = SpriteArray[2];
 
-                            VerHitbox.SetActive(true);
+                            //StrikeState Special Move
+                            if (StrikeState && GameState.GS.MeterCheck() >= SpecialMoveCost)
+                            {
+                                StrikeHitbox.SetActive(true);
+                                GameState.GS.MeterGain(-SpecialMoveCost);
+                                HorSwingingFrames = HorSwingingFrames / 2;
+                                HorStartingSwingFrames = HorStartingSwingFrames / 2;
+                            }
+
+                            else HorHitbox.SetActive(true);
                         }
 
-                        if (VerSwinging && VerSwingingFrames > 0)
+                        if (HorSwinging && HorSwingingFrames > 0)
                         {
-                            VerSwingingFrames = VerSwingingFrames - PlayerFrameRate;
+                            HorSwingingFrames = HorSwingingFrames - PlayerFrameRate;
                         }
 
                         //swing endlag
-                        if (VerSwinging && VerSwingingFrames <= 0 && !VerSwingEndlag)
+                        if (HorSwinging && HorSwingingFrames <= 0 && !HorSwingEndlag)
                         {
-                            VerSwinging = false;
-                            VerSwingEndlag = true;
-                            VerHitbox.SetActive(false);
-                            mySR.sprite = SpriteArray[6];
+                            HorSwinging = false;
+                            HorSwingEndlag = true;
+                            HorHitbox.SetActive(false);
+                            StrikeHitbox.SetActive(false);
+                            mySR.sprite = SpriteArray[3];
                         }
 
-                        if (VerSwingEndlag && VerEndlagFrames > 0)
+                        if (HorSwingEndlag && HorEndlagFrames > 0)
                         {
-                            VerEndlagFrames = VerEndlagFrames - PlayerFrameRate;
+                            HorEndlagFrames = HorEndlagFrames - PlayerFrameRate;
                         }
 
-                        if (VerSwingEndlag && VerEndlagFrames <= 0)
+                        if (HorSwingEndlag && HorEndlagFrames <= 0)
                         {
 
-                            VerSwingEndlag = false;
-                            VerSwing = false;
+                            HorSwingEndlag = false;
+                            HorSwing = false;
 
-                            VerSwingStartup = false;
-                            VerSwinging = false;
+                            HorSwingStartup = false;
+                            HorSwinging = false;
 
-                            VerEndlagFrames = BaseEndlagFrames;
-                            VerSwingingFrames = BaseSwingingFrames;
-                            VerStartingSwingFrames = BaseStartingSwingFrames;
+                            HorHitbox.SetActive(false);
+                            StrikeHitbox.SetActive(false);
 
-                            VerHitbox.SetActive(false);
-
+                            HorEndlagFrames = BaseEndlagFrames;
+                            HorSwingingFrames = BaseSwingingFrames;
+                            HorStartingSwingFrames = BaseStartingSwingFrames;
                             mySR.sprite = SpriteArray[0];
 
                             SwingState = false;
                         }
 
                     }
+                    //
+
+                    //Vertical Swing
+                    {
+                        {
+                            //VerSwing Startup
+                            if (VerSwing && !VerSwingStartup)
+                            {
+                                VerSwing = false;
+                                VerSwingStartup = true;
+                                mySR.sprite = SpriteArray[4];
+
+                            }
+
+                            if (VerSwingStartup && VerStartingSwingFrames > 0)
+                            {
+                                VerStartingSwingFrames = VerStartingSwingFrames - PlayerFrameRate;
+                            }
+
+
+                            //Swinging Frames
+                            if (VerSwingStartup && VerStartingSwingFrames <= 0 && !VerSwinging)
+                            {
+                                VerSwingStartup = false;
+                                VerSwinging = true;
+                                mySR.sprite = SpriteArray[5];
+
+                                VerHitbox.SetActive(true);
+                            }
+
+                            if (VerSwinging && VerSwingingFrames > 0)
+                            {
+                                VerSwingingFrames = VerSwingingFrames - PlayerFrameRate;
+                            }
+
+                            //swing endlag
+                            if (VerSwinging && VerSwingingFrames <= 0 && !VerSwingEndlag)
+                            {
+                                VerSwinging = false;
+                                VerSwingEndlag = true;
+                                VerHitbox.SetActive(false);
+                                mySR.sprite = SpriteArray[6];
+                            }
+
+                            if (VerSwingEndlag && VerEndlagFrames > 0)
+                            {
+                                VerEndlagFrames = VerEndlagFrames - PlayerFrameRate;
+                            }
+
+                            if (VerSwingEndlag && VerEndlagFrames <= 0)
+                            {
+
+                                VerSwingEndlag = false;
+                                VerSwing = false;
+
+                                VerSwingStartup = false;
+                                VerSwinging = false;
+
+                                VerEndlagFrames = BaseEndlagFrames;
+                                VerSwingingFrames = BaseSwingingFrames;
+                                VerStartingSwingFrames = BaseStartingSwingFrames;
+
+                                VerHitbox.SetActive(false);
+
+                                mySR.sprite = SpriteArray[0];
+
+                                SwingState = false;
+                            }
+
+                        }
+                    }
+                    //
                 }
-                //
+
             }
 
-        }
-
-        if(PlayMode == "Pitcher")
-        {
-            if (Input.GetKeyDown("m") && !throwstartup && !throwendlag)  throwing = true;
-            
-
-            //Throw Startup
-            if (throwing && !throwstartup)
+            //PITCHER MODE
+            if (PlayMode == "Pitcher")
             {
-                throwing = false;
-                throwstartup = true;
-                mySR.sprite = SpriteArray[9];
-            }
+                if (Input.GetKeyDown("m") && !throwstartup && !throwendlag) throwing = true;
 
-            if (throwstartup && throwStartupframes > 0)
-            {
-                throwStartupframes = throwStartupframes - PlayerFrameRate;
-            }
 
-            //Throwing Frames
-            if (throwstartup && throwStartupframes <= 0 && !throwendlag)
-            {
-                throwstartup = false;
-                throwendlag = true;
-                mySR.sprite = SpriteArray[10];
-
-                if (GameState.GS.MeterCheck() > SpecialMoveCost)
+                //Throw Startup
+                if (throwing && !throwstartup)
                 {
-                    Ball = Instantiate(BallPrefab, SpawnPoint.position, this.transform.rotation);
-                    Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed * Random.Range(1, maxSpeedMultiplier) * facing);
-                    Ball.GetComponent<Ball>().setHit(true);
+                    throwing = false;
+                    throwstartup = true;
+                    mySR.sprite = SpriteArray[9];
+                }
 
-                    GameState.GS.MeterGain(-(SpecialMoveCost * 2));
+                if (throwstartup && throwStartupframes > 0)
+                {
+                    throwStartupframes = throwStartupframes - PlayerFrameRate;
+                }
+
+                //Throwing Frames
+                if (throwstartup && throwStartupframes <= 0 && !throwendlag)
+                {
+                    throwstartup = false;
+                    throwendlag = true;
+                    mySR.sprite = SpriteArray[10];
+
+                    if (GameState.GS.MeterCheck() > SpecialMoveCost)
+                    {
+                        Ball = Instantiate(BallPrefab, SpawnPoint.position, this.transform.rotation);
+                        Ball.GetComponent<Ball>().SetSpeed(ThrowSpeed * Random.Range(1, maxSpeedMultiplier) * facing);
+                        Ball.GetComponent<Ball>().setHit(true);
+
+                        GameState.GS.MeterGain(-(SpecialMoveCost * 2));
+                    }
+                }
+
+                if (throwendlag && throwEndlagframes > 0)
+                {
+                    throwEndlagframes = throwEndlagframes - PlayerFrameRate;
+                }
+
+                //endlag frames
+                if (throwendlag && throwEndlagframes <= 0)
+                {
+                    throwing = false;
+                    throwstartup = false;
+                    throwendlag = false;
+                    throwStartupframes = OGthrowStartupframes;
+                    throwEndlagframes = OGthrowEndlagframes;
+                    mySR.sprite = SpriteArray[8];
+
+
                 }
             }
-
-            if (throwendlag && throwEndlagframes > 0)
-            {
-                throwEndlagframes = throwEndlagframes - PlayerFrameRate;
-            }
-
-            //endlag frames
-            if (throwendlag && throwEndlagframes <= 0)
-            {
-                throwing = false;
-                throwstartup = false;
-                throwendlag = false;
-                throwStartupframes = OGthrowStartupframes;
-                throwEndlagframes = OGthrowEndlagframes;
-                mySR.sprite = SpriteArray[8];
-
-              
-            }
         }
+
+
     }
 
     public void Reset()
